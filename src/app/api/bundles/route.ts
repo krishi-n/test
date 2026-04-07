@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { fetchBundles } from '../../../lib/firestore';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const search = searchParams.get('search') || undefined;

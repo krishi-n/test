@@ -1,0 +1,36 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Bundles - public read, authenticated write
+    match /bundles/{bundleId} {
+      allow read: if true;
+      allow create: if request.auth != null 
+        && request.auth.uid == request.resource.data.authorId;
+      allow update: if request.auth != null 
+        && request.auth.uid == resource.data.authorId;
+      allow delete: if request.auth != null 
+        && (request.auth.uid == resource.data.authorId 
+            || get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == "admin");
+    }
+    
+    // Users - self only
+    match /users/{userId} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Installs - system only
+    match /installs/{installId} {
+      allow read: if false;
+      allow create: if true; // Anonymous installs allowed
+    }
+    
+    // Reviews - authenticated
+    match /reviews/{reviewId} {
+      allow read: if true;
+      allow create: if request.auth != null;
+      allow update, delete: if request.auth != null 
+        && request.auth.uid == resource.data.userId;
+    }
+  }
+}

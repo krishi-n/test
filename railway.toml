@@ -1,0 +1,10 @@
+[build]
+builder = "nixpacks"
+
+[build.nixpacks]
+plan = "nodejs"
+
+[deploy]
+startCommand = "npx next start -p $PORT"
+restartPolicyType = "on_failure"
+restartPolicyMaxRetries = 3

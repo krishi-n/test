@@ -2,7 +2,9 @@ import { collection, doc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from './firebase';
 
 export async function addBundle(bundle: any) {
-  if (!db) return;
+  if (!db) {
+    throw new Error('Firestore not initialized');
+  }
   const ref = doc(collection(db, 'bundles'), bundle.id);
   await setDoc(ref, {
     ...bundle,

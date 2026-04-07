@@ -1,8 +1,10 @@
-import BundleGrid from '../components/BundleGrid';
-import { fetchBundles } from '../lib/firestore';
+'use client';
 
-export default async function Home() {
-  const bundles = await fetchBundles({ limit: 6 });
+import BundleGrid from '../components/BundleGrid';
+import { useBundles } from '../hooks/useBundles';
+
+export default function Home() {
+  const { bundles } = useBundles();
   return (
     <main>
       <section className="mb-10">
@@ -16,7 +18,7 @@ export default async function Home() {
           <h2 className="text-xl font-semibold">Featured Bundles</h2>
           <a className="text-sm text-blue-400 hover:underline" href="/bundles">View all</a>
         </div>
-        <BundleGrid bundles={bundles} />
+        <BundleGrid bundles={bundles.slice(0,6)} />
       </section>
     </main>
   );

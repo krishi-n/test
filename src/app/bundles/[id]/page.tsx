@@ -1,11 +1,12 @@
-import { fetchBundleById } from '../../../lib/firestore';
-import BundleDetail from '../../../components/BundleDetail';
+'use client';
 
-export default async function BundleDetailPage({ params }: { params: { id: string } }) {
-  const bundle = await fetchBundleById(params.id);
-  if (!bundle) {
-    return <div className="text-red-400">Bundle not found.</div>;
-  }
+import BundleDetail from '../../../components/BundleDetail';
+import { useBundle } from '../../../hooks/useBundle';
+
+export default function BundleDetailPage({ params }: { params: { id: string } }) {
+  const { bundle, loading } = useBundle(params.id);
+  if (loading) return <div className="text-neutral-400">Loading...</div>;
+  if (!bundle) return <div className="text-red-400">Bundle not found.</div>;
   return (
     <main>
       <BundleDetail bundle={bundle} />

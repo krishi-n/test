@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { addBundle } from '../lib/firestore-client';
 
 export default function UploadForm() {
   const [jsonText, setJsonText] = useState('');
@@ -13,7 +12,12 @@ export default function UploadForm() {
     try {
       const data = JSON.parse(jsonText);
       if (!data.id || !data.name) throw new Error('Bundle must include id and name');
-      await addBundle(data);
+      const res = await fetch('/api/bundles', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) throw new Error('Upload failed');
       setStatus('✅ Bundle uploaded successfully');
       setJsonText('');
     } catch (err: any) {

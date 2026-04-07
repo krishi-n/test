@@ -4,6 +4,7 @@ import type { Bundle } from '../types';
 
 export async function fetchBundles({ search, category, limit = 20 }: { search?: string; category?: string; limit?: number }) {
   try {
+    if (!db) return [] as Bundle[];
     let qRef = collection(db, 'bundles');
     let q = query(qRef, qlimit(limit));
     if (category) q = query(qRef, where('categories', 'array-contains', category), qlimit(limit));
@@ -21,6 +22,7 @@ export async function fetchBundles({ search, category, limit = 20 }: { search?: 
 
 export async function fetchBundleById(id: string) {
   try {
+    if (!db) return null;
     const ref = doc(db, 'bundles', id);
     const snap = await getDoc(ref);
     if (!snap.exists()) return null;

@@ -13,12 +13,13 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-// Initialize Firebase
-const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
+const isBuild = process.env.NEXT_PHASE === 'phase-production-build';
 
-// Get Firebase services
-export const db = getFirestore(app);
-export const storage = getStorage(app);
-export const auth = getAuth(app);
+// Avoid initializing Firebase during build to prevent invalid-api-key errors
+const app = !isBuild ? (getApps().length === 0 ? initializeApp(firebaseConfig) : getApp()) : null;
+
+export const db = app ? getFirestore(app) : null;
+export const storage = app ? getStorage(app) : null;
+export const auth = app ? getAuth(app) : null;
 
 export default app;

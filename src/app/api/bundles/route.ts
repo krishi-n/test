@@ -4,6 +4,9 @@ import { fetchBundles } from '../../../lib/firestore';
 export const dynamic = 'force-dynamic';
 
 export async function GET(req: Request) {
+  if (process.env.NEXT_PHASE === 'phase-production-build') {
+    return NextResponse.json({ bundles: [] });
+  }
   const { searchParams } = new URL(req.url);
   const search = searchParams.get('search') || undefined;
   const category = searchParams.get('category') || undefined;
